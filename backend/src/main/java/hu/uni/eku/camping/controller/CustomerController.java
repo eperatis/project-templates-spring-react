@@ -1,7 +1,7 @@
 package hu.uni.eku.camping.controller;
 
 import hu.uni.eku.camping.controller.dto.CustomerDto;
-import hu.uni.eku.camping.controller.dto.CustomerRequestDto;
+import hu.uni.eku.camping.controller.dto.CustomerRecordRequestDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +22,12 @@ public class CustomerController {
     @ApiOperation(value = "Record")
     public void record(
             @RequestBody
-                    CustomerRequestDto request
+                    CustomerRecordRequestDto request
     ) {
         log.info("Recording of customer ({}, {})", request.getFirstName(), request.getLastName());
     }
 
-    @GetMapping(value = {"/"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {""}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ApiOperation(value= "Query customers")
     public Collection<CustomerDto> query() {
