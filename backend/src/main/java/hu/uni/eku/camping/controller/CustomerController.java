@@ -1,7 +1,7 @@
 package hu.uni.eku.camping.controller;
 
 import hu.uni.eku.camping.controller.dto.CustomerDto;
-import hu.uni.eku.camping.controller.dto.CustomerRequestDto;
+import hu.uni.eku.camping.controller.dto.CustomerRecordRequestDto;
 import hu.uni.eku.camping.model.Customer;
 import hu.uni.eku.camping.service.CustomerService;
 import hu.uni.eku.camping.service.exceptions.CustomerAlreadyExistsException;
@@ -30,7 +30,7 @@ public class CustomerController {
     @ApiOperation(value = "Record")
     public void record(
             @RequestBody
-                    CustomerRequestDto request
+                    CustomerRecordRequestDto request
     ) {
         log.info("Recording of customer ({},{})", request.getFirstName(), request.getLastName());
         try {

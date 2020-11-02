@@ -1,11 +1,12 @@
 package hu.uni.eku.camping.controller.dto;
 
+import hu.uni.eku.camping.model.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -14,8 +15,8 @@ import java.util.Date;
 public class ReservationRecordRequestDto {
     private CustomerRecordRequestDto customer;
     private int slotId;
-    private int receptionistId;
-    private Date start;
-    private Date end;
+    private LocalDate start;
+    private LocalDate end;
     private boolean electricity;
+    private PaymentStatus paymentStatus;
 }

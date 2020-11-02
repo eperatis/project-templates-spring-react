@@ -2,7 +2,7 @@ package hu.uni.eku.camping.controller;
 
 import hu.uni.eku.camping.controller.dto.CustomerDto;
 import hu.uni.eku.camping.controller.dto.ReservationDto;
-import hu.uni.eku.camping.controller.dto.ReservationRequestDto;
+import hu.uni.eku.camping.controller.dto.ReservationRecordRequestDto;
 import hu.uni.eku.camping.model.Customer;
 import hu.uni.eku.camping.model.Reservation;
 import hu.uni.eku.camping.service.ReservationService;
@@ -28,7 +28,7 @@ public class ReservationController {
     @ApiOperation(value = "Record")
     public void record(
             @RequestBody
-                    ReservationRequestDto request
+                    ReservationRecordRequestDto request
     ) {
         log.info("Recording reservation for {} {} (address: {}, phone number: {}), at {} slot {}, from {} to {}",
                 request.getCustomer().getFirstName(),

@@ -1,7 +1,7 @@
 package hu.uni.eku.camping.controller;
 
 import hu.uni.eku.camping.controller.dto.CampingSlotDto;
-import hu.uni.eku.camping.controller.dto.CampingSlotRequestDto;
+import hu.uni.eku.camping.controller.dto.CampingSlotRecordRequestDto;
 import hu.uni.eku.camping.model.CampingSlot;
 import hu.uni.eku.camping.service.CampingSlotService;
 import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyExistsException;
@@ -29,7 +29,7 @@ public class CampingSlotController {
     @ApiOperation(value = "Record")
     public void record(
             @RequestBody
-                    CampingSlotRequestDto request
+                    CampingSlotRecordRequestDto request
     ) {
         log.info("Recording of Camping Slot ({})", request.getDescription());
         try {

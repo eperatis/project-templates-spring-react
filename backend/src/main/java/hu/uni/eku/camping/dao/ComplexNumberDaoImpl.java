@@ -22,7 +22,7 @@ public class ComplexNumberDaoImpl implements ComplexNumberDao {
     @Override
     public Collection<ComplexNumber> readAll() {
         return StreamSupport.stream(repository.findAll().spliterator(),false)
-                .map(entity -> ComplexNumberEntityModelConverter.entity2model(entity))
+                .map(ComplexNumberEntityModelConverter::entity2model)
                 .collect(Collectors.toList());
     }
 
