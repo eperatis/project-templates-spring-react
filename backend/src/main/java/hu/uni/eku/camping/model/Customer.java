@@ -1,11 +1,13 @@
-package hu.uni.eku.camping.controller.dto;
+package hu.uni.eku.camping.model;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-public class CustomerDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Customer {
     private int id;
     private String firstName;
     private String lastName;

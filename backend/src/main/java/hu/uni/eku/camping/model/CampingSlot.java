@@ -1,17 +1,15 @@
-package hu.uni.eku.camping.controller.dto;
+package hu.uni.eku.camping.model;
 
-import hu.uni.eku.camping.model.SlotStatus;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.geo.Point;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class CampingSlotRecordRequestDto {
+@NoArgsConstructor
+public class CampingSlot {
+    private int id;
     private Point startCoordinate;
     private Point endCoordinate;
     private SlotStatus slotStatus;

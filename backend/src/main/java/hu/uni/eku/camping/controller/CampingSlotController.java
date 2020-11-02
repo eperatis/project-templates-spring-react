@@ -2,57 +2,65 @@ package hu.uni.eku.camping.controller;
 
 import hu.uni.eku.camping.controller.dto.CampingSlotDto;
 import hu.uni.eku.camping.controller.dto.CampingSlotRecordRequestDto;
+import hu.uni.eku.camping.model.CampingSlot;
+import hu.uni.eku.camping.service.CampingSlotService;
+import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyExistsException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/camping-slot")
+@RequestMapping(value = "/slot")
 @RequiredArgsConstructor
-@Api(tags = "Camping Slot")
+@Api(tags = "Camping Slots")
 @Slf4j
 public class CampingSlotController {
+    private final CampingSlotService service;
 
     @PostMapping("/record")
     @ApiOperation(value = "Record")
     public void record(
-            @RequestBody CampingSlotRecordRequestDto request
-            ){
-        log.info("Recording of slot's coordinate ({}, {})", request.getStartCoordinate(),request.getEndCoordinate());
+            @RequestBody
+                    CampingSlotRecordRequestDto request
+    ) {
+        log.info("Recording of Camping Slot ({})", request.getDescription());
+        try {
+            service.record(new CampingSlot(
+                    -1,
+                    request.getStartCoordinate(),
+                    request.getEndCoordinate(),
+                    request.getSlotStatus(),
+                    request.getDescription()
+            ));
+        } catch (CampingSlotAlreadyExistsException e) {
+            log.info("Camping slot ({}) is already exists! Message: {}", request.getDescription(), e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    e.getMessage()
+            );
+        }
     }
 
-    @GetMapping(value = {""}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {"/"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @ApiOperation(value = "Query camping slolts")
+    @ApiOperation(value = "Query Camping Slots")
     public Collection<CampingSlotDto> query() {
-        CampingSlotDto dto = CampingSlotDto.builder()
-                .id(3)
-                .startCoordinate(new Point(0,1))
-                .endCoordinate(new Point(2,4))
-                .price(4500)
-                .reserved(true)
-                .description("Fa")
-                .build();
-
-        Collection<CampingSlotDto> result = new ArrayList<>();
-        result.add(dto);
-        dto = CampingSlotDto.builder()
-                .id(4)
-                .startCoordinate(new Point(5,5))
-                .endCoordinate(new Point(5,7))
-                .price(4501)
-                .reserved(false)
-                .description("Fa2")
-                .build();
-        result.add(dto);
-        return result;
+        return service.readAll().stream().map(model ->
+                CampingSlotDto.builder()
+                        .id(model.getId())
+                        .startCoordinate(model.getStartCoordinate())
+                        .endCoordinate(model.getEndCoordinate())
+                        .slotStatus(model.getSlotStatus())
+                        .description(model.getDescription())
+                        .build())
+                .collect(Collectors.toList());
     }
-
 }
