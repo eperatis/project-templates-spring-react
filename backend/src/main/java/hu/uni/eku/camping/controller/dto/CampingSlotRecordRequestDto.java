@@ -11,7 +11,7 @@ import org.springframework.data.geo.Point;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CampingSlotRequestDto {
+public class CampingSlotRecordRequestDto {
     private Point startCoordinate;
     private Point endCoordinate;
     private SlotStatus slotStatus;
