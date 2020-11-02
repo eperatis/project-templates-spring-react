@@ -2,28 +2,33 @@ package hu.uni.eku.camping.controller;
 
 import hu.uni.eku.camping.controller.dto.CustomerDto;
 import hu.uni.eku.camping.controller.dto.ReservationDto;
-import hu.uni.eku.camping.controller.dto.ReservationRecordRequestDto;
+import hu.uni.eku.camping.controller.dto.ReservationRequestDto;
+import hu.uni.eku.camping.model.Customer;
+import hu.uni.eku.camping.model.Reservation;
+import hu.uni.eku.camping.service.ReservationService;
+import hu.uni.eku.camping.service.exceptions.ReservationAlreadyExistsException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(value = "/reservation")
 @RequiredArgsConstructor
-@Api(tags = "Reservations")
+@Api(tags = "Reservation")
 @Slf4j
 public class ReservationController {
+    private final ReservationService service;
+
     @PostMapping("/record")
     @ApiOperation(value = "Record")
     public void record(
             @RequestBody
-                    ReservationRecordRequestDto request
+                    ReservationRequestDto request
     ) {
         log.info("Recording reservation for {} {} (address: {}, phone number: {}), at {} slot {}, from {} to {}",
                 request.getCustomer().getFirstName(),
@@ -34,37 +39,54 @@ public class ReservationController {
                 request.isElectricity() ? "with electricity" : "without electricity",
                 request.getStart(),
                 request.getEnd());
+        try {
+            service.record(new Reservation(
+                    request.getStart(),
+                    request.getEnd(),
+                    request.isElectricity(),
+                    request.getPaymentStatus()
+            ), new Customer(
+                    -1,
+                    request.getCustomer().getFirstName(),
+                    request.getCustomer().getLastName(),
+                    request.getCustomer().getAddress(),
+                    request.getCustomer().getPhoneNumber()
+            ), request.getSlotId());
+        } catch (ReservationAlreadyExistsException e) {
+            log.info("Reservation ({},{}) is already exists! Message: {}", request.getStart(), request.getEnd(), e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    e.getMessage()
+            );
+        }
     }
 
-    @GetMapping(value = {""}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {"/{customerId}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Query Reservation")
-    public Collection<ReservationDto> query() {
-        Collection<ReservationDto> result = new ArrayList<>();
-        ReservationDto dto = ReservationDto.builder()
-                .customer(
-                        CustomerDto.builder()
-                                .firstName("John")
-                                .lastName("Smith")
-                                .address("3300, Eger Leányka utca 4.")
-                                .phoneNumber("06309453234")
-                                .build()
-                )
-                .price(6450)
+    public ReservationDto query(@PathVariable int customerId) {
+        Customer customer = service.getCustomer(customerId);
+        return ReservationDto.builder()
+                .customer(CustomerDto.builder()
+                        .id(customer.getId())
+                        .firstName(customer.getFirstName())
+                        .lastName(customer.getLastName())
+                        .address(customer.getAddress())
+                        .phoneNumber(customer.getPhoneNumber())
+                        .build())
+                .price(service.getPrice(customerId))
+                .expanses(service.findByCustomerId(customerId).getExpenses())
                 .build();
-        result.add(dto);
-        dto = ReservationDto.builder()
-                .customer(
-                        CustomerDto.builder()
-                                .firstName("Mike")
-                                .lastName("Hawk")
-                                .address("3300, Eger Leányka utca 5.")
-                                .phoneNumber("06309453235")
-                                .build()
-                )
+    }
 
-                .price(7500)
-                .build();
-        result.add(dto);
-        return result;
+    @DeleteMapping("/delete/{id}")
+    @ApiOperation(value = "Delete")
+    public void delete(@PathVariable int id) {
+        log.info("Deleting reservation {}", id);
+    }
+
+    @PostMapping("/pay/{customerId}")
+    @ApiOperation(value = "Post")
+    public void pay(@PathVariable int customerId) {
+        service.payReservation(customerId);
     }
 }

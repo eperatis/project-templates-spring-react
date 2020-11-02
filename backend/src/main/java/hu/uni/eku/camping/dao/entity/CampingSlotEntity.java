@@ -28,4 +28,6 @@ public class CampingSlotEntity {
     private SlotStatus slotStatus;
     @Column
     private String description;
+    @OneToOne(mappedBy = "campingSlot")
+    private ReservationEntity reservation;
 }

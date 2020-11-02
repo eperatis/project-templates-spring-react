@@ -11,6 +11,8 @@ public interface CampingSlotDao {
 
     Collection<CampingSlot> readAll();
 
+    CampingSlot findByCustomerId(int id);
+
     CampingSlot findById(int id);
 
     void update(CampingSlot original, CampingSlot updated);

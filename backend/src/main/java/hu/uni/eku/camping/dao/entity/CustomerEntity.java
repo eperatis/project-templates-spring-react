@@ -23,4 +23,6 @@ public class CustomerEntity {
     private String address;
     @Column
     private String phoneNumber;
+    @OneToOne(mappedBy = "customer")
+    private ReservationEntity reservation;
 }

@@ -28,6 +28,11 @@ public class CampingSlotDaoImpl implements CampingSlotDao {
     }
 
     @Override
+    public CampingSlot findByCustomerId(int id) {
+        return CampingSlotEntityModelConverter.entity2model(repository.findByReservation_Customer_Id(id));
+    }
+
+    @Override
     public CampingSlot findById(int id) {
         return CampingSlotEntityModelConverter.entity2model(repository.findById(id));
     }

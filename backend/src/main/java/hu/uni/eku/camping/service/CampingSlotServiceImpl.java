@@ -20,8 +20,8 @@ public class CampingSlotServiceImpl implements CampingSlotService {
                 .stream()
                 .anyMatch(cs ->
                         cs.getStartCoordinate() == campingSlot.getStartCoordinate()
-                                && cs.getEndCoordinate() == campingSlot.getEndCoordinate()
-                                && cs.getDescription().equals(campingSlot.getDescription()));
+                        && cs.getEndCoordinate() == campingSlot.getEndCoordinate()
+                        && cs.getDescription().equals(campingSlot.getDescription()));
 
         if (isAlreadyRecorded) {
             log.info("Camping Slot {} is already recorded!", campingSlot);

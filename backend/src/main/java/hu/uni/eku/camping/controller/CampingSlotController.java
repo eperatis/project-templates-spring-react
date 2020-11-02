@@ -1,7 +1,7 @@
 package hu.uni.eku.camping.controller;
 
 import hu.uni.eku.camping.controller.dto.CampingSlotDto;
-import hu.uni.eku.camping.controller.dto.CampingSlotRecordRequestDto;
+import hu.uni.eku.camping.controller.dto.CampingSlotRequestDto;
 import hu.uni.eku.camping.model.CampingSlot;
 import hu.uni.eku.camping.service.CampingSlotService;
 import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyExistsException;
@@ -29,9 +29,9 @@ public class CampingSlotController {
     @ApiOperation(value = "Record")
     public void record(
             @RequestBody
-                    CampingSlotRecordRequestDto request
-    ){
-        log.info("Recording of Camping Slot ({})",request.getDescription());
+                    CampingSlotRequestDto request
+    ) {
+        log.info("Recording of Camping Slot ({})", request.getDescription());
         try {
             service.record(new CampingSlot(
                     -1,
@@ -51,10 +51,11 @@ public class CampingSlotController {
 
     @GetMapping(value = {"/"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @ApiOperation(value= "Query Camping Slots")
-    public Collection<CampingSlotDto> query(){
+    @ApiOperation(value = "Query Camping Slots")
+    public Collection<CampingSlotDto> query() {
         return service.readAll().stream().map(model ->
                 CampingSlotDto.builder()
+                        .id(model.getId())
                         .startCoordinate(model.getStartCoordinate())
                         .endCoordinate(model.getEndCoordinate())
                         .slotStatus(model.getSlotStatus())
