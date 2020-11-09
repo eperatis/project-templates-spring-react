@@ -2,10 +2,10 @@ package hu.uni.eku.camping.dao;
 
 import hu.uni.eku.camping.dao.entity.CampingSlotEntity;
 import hu.uni.eku.camping.model.CampingSlot;
-import hu.uni.eku.camping.model.SlotStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -48,28 +48,37 @@ public class CampingSlotDaoImpl implements CampingSlotDao {
     }
 
     @Override
-    public void setStatus(int campingSlotId, SlotStatus slotStatus) {
-        CampingSlotEntity campingSlot = repository.findById(campingSlotId);
-        campingSlot.setSlotStatus(slotStatus);
-        repository.save(campingSlot);
+    public Collection<CampingSlot> findAllBetweenInterval(LocalDate start, LocalDate end) {
+        return repository.findAllBetweenInterval(start, end).stream()
+                .map(CampingSlotEntityModelConverter::entity2model)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isReserved(int id, LocalDate date) {
+        return repository.numberOfReservationsForSlot(id, date) > 0;
+    }
+
+    @Override
+    public boolean isReserved(int id, LocalDate start, LocalDate end) {
+        return findAllBetweenInterval(start, end).stream()
+                .anyMatch(s -> s.getId() == id);
     }
 
     public static class CampingSlotEntityModelConverter {
-        public static CampingSlot entity2model(CampingSlotEntity entity){
+        public static CampingSlot entity2model(CampingSlotEntity entity) {
             return new CampingSlot(
                     entity.getId(),
                     entity.getStartCoordinate(),
                     entity.getEndCoordinate(),
-                    entity.getSlotStatus(),
                     entity.getDescription()
             );
         }
 
-        public static CampingSlotEntity model2entity(CampingSlot model){
+        public static CampingSlotEntity model2entity(CampingSlot model) {
             return CampingSlotEntity.builder()
                     .startCoordinate(model.getStartCoordinate())
                     .endCoordinate(model.getEndCoordinate())
-                    .slotStatus(model.getSlotStatus())
                     .description(model.getDescription())
                     .build();
         }

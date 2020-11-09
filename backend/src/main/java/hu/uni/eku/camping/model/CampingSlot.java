@@ -12,6 +12,5 @@ public class CampingSlot {
     private int id;
     private Point startCoordinate;
     private Point endCoordinate;
-    private SlotStatus slotStatus;
     private String description;
 }

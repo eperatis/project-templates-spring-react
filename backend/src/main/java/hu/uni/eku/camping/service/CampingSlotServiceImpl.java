@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Slf4j
@@ -33,5 +34,15 @@ public class CampingSlotServiceImpl implements CampingSlotService {
     @Override
     public Collection<CampingSlot> readAll() {
         return dao.readAll();
+    }
+
+    @Override
+    public Collection<CampingSlot> findAllBetweenInterval(LocalDate start, LocalDate end) {
+        return dao.findAllBetweenInterval(start, end);
+    }
+
+    @Override
+    public boolean isReserved(int id, LocalDate date) {
+        return dao.isReserved(id, date);
     }
 }
