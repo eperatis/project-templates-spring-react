@@ -2,7 +2,9 @@ package hu.uni.eku.camping.controller;
 
 import hu.uni.eku.camping.controller.dto.CampingSlotDto;
 import hu.uni.eku.camping.controller.dto.CampingSlotRecordRequestDto;
+import hu.uni.eku.camping.controller.dto.IntervalRequestDto;
 import hu.uni.eku.camping.model.CampingSlot;
+import hu.uni.eku.camping.model.SlotStatus;
 import hu.uni.eku.camping.service.CampingSlotService;
 import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyExistsException;
 import io.swagger.annotations.Api;
@@ -14,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -37,7 +40,6 @@ public class CampingSlotController {
                     -1,
                     request.getStartCoordinate(),
                     request.getEndCoordinate(),
-                    request.getSlotStatus(),
                     request.getDescription()
             ));
         } catch (CampingSlotAlreadyExistsException e) {
@@ -49,7 +51,7 @@ public class CampingSlotController {
         }
     }
 
-    @GetMapping(value = {"/"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {"/status"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ApiOperation(value = "Query Camping Slots")
     public Collection<CampingSlotDto> query() {
@@ -58,7 +60,25 @@ public class CampingSlotController {
                         .id(model.getId())
                         .startCoordinate(model.getStartCoordinate())
                         .endCoordinate(model.getEndCoordinate())
-                        .slotStatus(model.getSlotStatus())
+                        .slotStatus(service.isReserved(model.getId(), LocalDate.now()) ? SlotStatus.NOT_EMPTY : SlotStatus.EMPTY)
+                        .description(model.getDescription())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping(value = {""}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ApiOperation(value = "Query Reserved Camping Slots during interval")
+    public Collection<CampingSlotDto> queryReserved(
+            @RequestBody
+                    IntervalRequestDto request
+    ) {
+        return service.findAllBetweenInterval(request.getStart(), request.getEnd()).stream().map(model ->
+                CampingSlotDto.builder()
+                        .id(model.getId())
+                        .startCoordinate(model.getStartCoordinate())
+                        .endCoordinate(model.getEndCoordinate())
+                        .slotStatus(service.isReserved(model.getId(), LocalDate.now()) ? SlotStatus.NOT_EMPTY : SlotStatus.EMPTY)
                         .description(model.getDescription())
                         .build())
                 .collect(Collectors.toList());

@@ -4,6 +4,7 @@ import hu.uni.eku.camping.dao.CampingSlotDao;
 import hu.uni.eku.camping.dao.CustomerDao;
 import hu.uni.eku.camping.dao.ReservationDao;
 import hu.uni.eku.camping.model.*;
+import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyReservedException;
 import hu.uni.eku.camping.service.exceptions.ReservationAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final CustomerDao customerDao;
 
     @Override
-    public void record(Reservation reservation, Customer customer, int campingSlotId) throws ReservationAlreadyExistsException {
+    public void record(Reservation reservation, Customer customer, int campingSlotId) throws ReservationAlreadyExistsException, CampingSlotAlreadyReservedException {
         final boolean isAlreadyRecorded = reservationDao.readAll()
                 .stream()
                 .anyMatch(r ->
@@ -33,10 +34,12 @@ public class ReservationServiceImpl implements ReservationService {
         if (isAlreadyRecorded) {
             log.info("Reservation {} is already recorded!", reservation);
             throw new ReservationAlreadyExistsException(String.format("Reservation (%s) already exists!", reservation.toString()));
-
+        }
+        if (campingSlotDao.isReserved(campingSlotId, reservation.getStart(), reservation.getEnd())) {
+            log.info("Camping slot {} is already reserved!", campingSlotId);
+            throw new CampingSlotAlreadyReservedException(String.format("Camping slot (%s) already reserved!", campingSlotId));
         }
         reservationDao.create(reservation, customer, campingSlotId);
-        campingSlotDao.setStatus(campingSlotId, SlotStatus.NOT_EMPTY);
     }
 
     @Override
@@ -80,9 +83,5 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void payReservation(int customerId) {
         reservationDao.payReservation(customerId);
-        System.out.println("*************************");
-        System.out.println(campingSlotDao.findByCustomerId(customerId).getId());
-        System.out.println("*************************");
-        campingSlotDao.setStatus(campingSlotDao.findByCustomerId(customerId).getId(), SlotStatus.EMPTY);
     }
 }

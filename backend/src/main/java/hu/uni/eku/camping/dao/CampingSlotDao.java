@@ -1,8 +1,8 @@
 package hu.uni.eku.camping.dao;
 
 import hu.uni.eku.camping.model.CampingSlot;
-import hu.uni.eku.camping.model.SlotStatus;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 public interface CampingSlotDao {
@@ -19,5 +19,9 @@ public interface CampingSlotDao {
 
     void delete(CampingSlot campingSlot);
 
-    void setStatus(int campingSlotId, SlotStatus slotStatus);
+    Collection<CampingSlot> findAllBetweenInterval(LocalDate start, LocalDate end);
+
+    boolean isReserved(int id, LocalDate date);
+
+    boolean isReserved(int id, LocalDate start, LocalDate end);
 }

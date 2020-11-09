@@ -31,11 +31,4 @@ public class Reservation extends Billable {
     public int getDays() {
         return 0;
     }
-//    private CampingSlot campingSlot;
-
-//    private int price(){
-//        return ((int)DAYS.between(getStart(), getEnd()) * DAILY_PRICE + (isElectricity() ? ELECTRICITY_PRICE : 0))
-//                * (int)(campingSlot.getStartCoordinate().getX() - campingSlot.getEndCoordinate().getX())
-//                * (int)(campingSlot.getStartCoordinate().getX() - campingSlot.getEndCoordinate().getX());
-//    }
 }
