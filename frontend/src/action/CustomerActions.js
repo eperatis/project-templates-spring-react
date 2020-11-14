@@ -11,7 +11,7 @@ export const recordingCustomer = ({address,firstName,lastName,phoneNumber}) =>{
             phoneNumber : phoneNumber
         })
         .then(() => {
-            fetchCustomers();
+
             dispatcher.dispatch({action: actionConstants.clearError});
         })
         .catch((err) => {

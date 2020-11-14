@@ -1,6 +1,7 @@
 import {EventEmitter} from 'events';
 import {default as dispatcher} from '../dispatcher/Dispatcher';
 import * as actionConstants from '../dispatcher/ComplexNumberActionConstants'
+import * as costumerConstants from '../dispatcher/CustomerActionConstants'
 
 class ErrorMessageStore extends EventEmitter{
 
@@ -34,4 +35,19 @@ dispatcher.register(({action})=>{
    if(action !== actionConstants.clearError) return;
    store._errorMsg = "";
    store.emitChage();
+});
+
+dispatcher.register(({action,payload})=>{
+    console.log({action : action, payload : payload});
+    if(action !== costumerConstants.showError){
+        return;
+    }
+    store._errorMsg = payload;
+    store.emitChage();
+});
+
+dispatcher.register(({action})=>{
+    if(action !== costumerConstants.clearError) return;
+    store._errorMsg = "";
+    store.emitChage();
 });

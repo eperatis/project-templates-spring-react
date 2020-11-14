@@ -10,8 +10,6 @@ import {
 
 //Pages
 import Sidebar from "./component/Sidebar";
-import ComplexNumberRecordingForm from "./component/ComplexNumberRecordingForm";
-import ComplexNumberList from "./component/ComplexNumberList";
 import CustomerList from "./component/CustomerList";
 import CustomerRecordingForm from "./component/CustomerRecordingForm";
 import NotFound from "./component/NotFound";
