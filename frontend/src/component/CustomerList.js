@@ -1,6 +1,7 @@
 import React from "react";
 import {default as store} from '../store/CustomerStore';
 import CustomerItemList from "./CustomerItemList";
+import * as actions from "../action/CustomerActions";
 
 class CustomerList extends React.Component{
 
@@ -11,6 +12,8 @@ class CustomerList extends React.Component{
     }
 
     componentDidMount() {
+        actions.fetchCustomers();
+
         store.addChangeListener(this._updateState);
     }
 
@@ -26,6 +29,7 @@ class CustomerList extends React.Component{
     render() {
         return(
             <div>
+
                 {this.state.customers.map(({address,firstName,lastName,phoneNumber}, index) =>{
                     return(
                       <CustomerItemList key={index} address={address} firstName={firstName} lastName={lastName} phoneNumber={phoneNumber} />
