@@ -26,6 +26,7 @@ class CustomerList extends React.Component{
     render() {
         return(
             <div>
+                <h1>Customers</h1>
                 {this.state.customers.map(({address,firstName,lastName,phoneNumber}, index) =>{
                     return(
                       <CustomerItemList key={index} address={address} firstName={firstName} lastName={lastName} phoneNumber={phoneNumber} />

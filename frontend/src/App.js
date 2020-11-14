@@ -1,17 +1,21 @@
 import React from 'react';
 import './App.scss';
 import {Container, Row, Col } from "react-bootstrap";
-import ComplexNumberRecordingForm from "./component/ComplexNumberRecordingForm";
-import ComplexNumberList from "./component/ComplexNumberList";
-import CustomerList from "./component/CustomerList";
-import CustomerRecordingForm from "./component/CustomerRecordingForm";
-import Sidebar from "./component/Sidebar";
 import {
     BrowserRouter as Router,
     Route,
     Switch,
     Redirect
 } from 'react-router-dom';
+
+//Pages
+import Sidebar from "./component/Sidebar";
+import ComplexNumberRecordingForm from "./component/ComplexNumberRecordingForm";
+import ComplexNumberList from "./component/ComplexNumberList";
+import CustomerList from "./component/CustomerList";
+import CustomerRecordingForm from "./component/CustomerRecordingForm";
+import NotFound from "./component/NotFound";
+
 
 
 function App() {
@@ -31,7 +35,7 @@ function App() {
                                       {/*<Route exact path="/slot/status" component={Slots}/>*/}
                                       <Route exact path="/customer" component={CustomerList}/>
                                       <Route exact path="/customer/record" component={CustomerRecordingForm}/>
-                                      {/*<Route exact path="/404" component={NotFound}/>*/}
+                                      <Route exact path="/404" component={NotFound}/>
                                       <Redirect to="/404"/>
                                       <CustomerRecordingForm/>
                                       <CustomerList/>

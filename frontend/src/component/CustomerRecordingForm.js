@@ -23,6 +23,7 @@ class CustomerRecordingForm extends React.Component{
     render() {
         return (
             <div>
+                <h1>Customer Recording</h1>
                 <ErrorMessageWell/>
                 <label htmlFor={"address"}>Address</label>
                 <input type={"string"} id={"address"} name={"address"} value={this.state.address}
