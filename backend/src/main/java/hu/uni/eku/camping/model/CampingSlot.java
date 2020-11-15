@@ -10,6 +10,7 @@ import org.springframework.data.geo.Point;
 @NoArgsConstructor
 public class CampingSlot {
     private int id;
+    private String name;
     private Point startCoordinate;
     private Point endCoordinate;
     private String description;

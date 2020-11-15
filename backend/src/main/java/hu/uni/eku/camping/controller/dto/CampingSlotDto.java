@@ -9,6 +9,7 @@ import org.springframework.data.geo.Point;
 @Builder
 public class CampingSlotDto {
     private int id;
+    private String name;
     private Point startCoordinate;
     private Point endCoordinate;
     private SlotStatus slotStatus;
