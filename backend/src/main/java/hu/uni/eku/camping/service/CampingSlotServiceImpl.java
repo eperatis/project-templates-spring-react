@@ -15,14 +15,15 @@ import java.util.Collection;
 @Service
 public class CampingSlotServiceImpl implements CampingSlotService {
     private final CampingSlotDao dao;
+
     @Override
     public void record(CampingSlot campingSlot) throws CampingSlotAlreadyExistsException {
         final boolean isAlreadyRecorded = dao.readAll()
                 .stream()
                 .anyMatch(cs ->
                         cs.getStartCoordinate() == campingSlot.getStartCoordinate()
-                        && cs.getEndCoordinate() == campingSlot.getEndCoordinate()
-                        && cs.getDescription().equals(campingSlot.getDescription()));
+                                && cs.getEndCoordinate() == campingSlot.getEndCoordinate()
+                                && cs.getDescription().equals(campingSlot.getDescription()));
 
         if (isAlreadyRecorded) {
             log.info("Camping Slot {} is already recorded!", campingSlot);
