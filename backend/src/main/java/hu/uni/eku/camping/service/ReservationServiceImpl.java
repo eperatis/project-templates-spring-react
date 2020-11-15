@@ -35,7 +35,7 @@ public class ReservationServiceImpl implements ReservationService {
             log.info("Reservation {} is already recorded!", reservation);
             throw new ReservationAlreadyExistsException(String.format("Reservation (%s) already exists!", reservation.toString()));
         }
-        if (campingSlotDao.isReserved(campingSlotId, reservation.getStart(), reservation.getEnd())) {
+        if (!campingSlotDao.isReserved(campingSlotId, reservation.getStart(), reservation.getEnd())) {
             log.info("Camping slot {} is already reserved!", campingSlotId);
             throw new CampingSlotAlreadyReservedException(String.format("Camping slot (%s) already reserved!", campingSlotId));
         }
