@@ -9,6 +9,9 @@ class Sidebar extends React.Component {
                     <Nav.Link href="/">Kezdőlap</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
+                    <Nav.Link href="/free-slots">Szabad táborhelyek</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
                     <Nav.Link href="/customer">Customer</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>

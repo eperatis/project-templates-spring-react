@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events'
 import dispatcher from "../dispatcher/Dispatcher";
-import {refreshMap} from '../dispatcher/SlotActionConstants';
+import {refreshMap, refreshSlots} from '../dispatcher/SlotActionConstants';
 
 class SlotStore extends EventEmitter {
 
@@ -26,5 +26,11 @@ export default store;
 dispatcher.register(({action, payload}) => {
     if (action !== refreshMap) return;
     store._map = payload;
+    store.emitChange();
+})
+
+dispatcher.register(({action, payload}) => {
+    if (action !== refreshSlots) return;
+    store._freeSlots = payload;
     store.emitChange();
 })

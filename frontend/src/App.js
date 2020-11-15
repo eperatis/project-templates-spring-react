@@ -14,6 +14,8 @@ import CustomerRecordingForm from "./component/CustomerRecordingForm";
 import NotFound from "./component/NotFound";
 
 import Map from "./component/Map";
+import FreeSlotList from "./component/FreeSlotList";
+import ReservationRecordingForm from "./component/ReservationRecordingForm";
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
                 <div className={"col-md-8"}>
                     <Switch>
                         {<Route exact path="/" component={Map}/>}
+                        <Route exact path="/free-slots" component={FreeSlotList}/>
+                        <Route exact path="/reservation/record" component={ReservationRecordingForm}/>
                         <Route exact path="/customer" component={CustomerList}/>
                         <Route exact path="/customer/record" component={CustomerRecordingForm}/>
                         <Route exact path="/404" component={NotFound}/>
