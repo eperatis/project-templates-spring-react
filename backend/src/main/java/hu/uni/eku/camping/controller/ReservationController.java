@@ -4,6 +4,7 @@ import hu.uni.eku.camping.controller.dto.CustomerDto;
 import hu.uni.eku.camping.controller.dto.ReservationDto;
 import hu.uni.eku.camping.controller.dto.ReservationRecordRequestDto;
 import hu.uni.eku.camping.model.Customer;
+import hu.uni.eku.camping.model.PaymentStatus;
 import hu.uni.eku.camping.model.Reservation;
 import hu.uni.eku.camping.service.ReservationService;
 import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyReservedException;
@@ -45,7 +46,7 @@ public class ReservationController {
                     request.getStart(),
                     request.getEnd(),
                     request.isElectricity(),
-                    request.getPaymentStatus()
+                    PaymentStatus.NOT_PAID
             ), new Customer(
                     -1,
                     request.getCustomer().getFirstName(),
