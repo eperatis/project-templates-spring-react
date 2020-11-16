@@ -1,6 +1,5 @@
 package hu.uni.eku.camping.controller.dto;
 
-import hu.uni.eku.camping.model.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +17,4 @@ public class ReservationRecordRequestDto {
     private LocalDate start;
     private LocalDate end;
     private boolean electricity;
-    private PaymentStatus paymentStatus;
 }
