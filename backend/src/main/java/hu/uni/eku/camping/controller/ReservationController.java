@@ -7,6 +7,7 @@ import hu.uni.eku.camping.model.Customer;
 import hu.uni.eku.camping.model.Reservation;
 import hu.uni.eku.camping.service.ReservationService;
 import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyReservedException;
+import hu.uni.eku.camping.service.exceptions.EmptyStringException;
 import hu.uni.eku.camping.service.exceptions.ReservationAlreadyExistsException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,6 +64,12 @@ public class ReservationController {
             log.info("Camping slot ({}) is already reserved! Message: {}", request.getSlotId(), e.getMessage());
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
+                    e.getMessage()
+            );
+        } catch (EmptyStringException e) {
+            log.info("Empty parameter! Message: {}", e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
                     e.getMessage()
             );
         }

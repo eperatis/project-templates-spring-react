@@ -5,6 +5,7 @@ import hu.uni.eku.camping.controller.dto.CustomerRecordRequestDto;
 import hu.uni.eku.camping.model.Customer;
 import hu.uni.eku.camping.service.CustomerService;
 import hu.uni.eku.camping.service.exceptions.CustomerAlreadyExistsException;
+import hu.uni.eku.camping.service.exceptions.EmptyStringException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +43,16 @@ public class CustomerController {
                     request.getPhoneNumber()
             ));
         } catch (CustomerAlreadyExistsException e) {
-            log.info("Customer ({},{}) is already exists! Message: {}", request.getFirstName(), request.getLastName(), e.getMessage());
+            log.info("Customer ({},{}) is already exists! Message: {}", request.getFirstName(), request.getLastName(),
+                    e.getMessage());
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage()
+            );
+        } catch (EmptyStringException e) {
+            log.info("Empty parameter! Message: {}", e.getMessage());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
                     e.getMessage()
             );
         }

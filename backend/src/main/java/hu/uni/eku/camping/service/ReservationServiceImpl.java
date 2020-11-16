@@ -5,6 +5,7 @@ import hu.uni.eku.camping.dao.CustomerDao;
 import hu.uni.eku.camping.dao.ReservationDao;
 import hu.uni.eku.camping.model.*;
 import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyReservedException;
+import hu.uni.eku.camping.service.exceptions.EmptyStringException;
 import hu.uni.eku.camping.service.exceptions.ReservationAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final CustomerDao customerDao;
 
     @Override
-    public void record(Reservation reservation, Customer customer, int campingSlotId) throws ReservationAlreadyExistsException, CampingSlotAlreadyReservedException {
+    public void record(Reservation reservation, Customer customer, int campingSlotId)
+            throws ReservationAlreadyExistsException, CampingSlotAlreadyReservedException, EmptyStringException {
         final boolean isAlreadyRecorded = reservationDao.readAll()
                 .stream()
                 .anyMatch(r ->
@@ -33,12 +35,15 @@ public class ReservationServiceImpl implements ReservationService {
                                 && ((Reservation) r).isElectricity() == reservation.isElectricity());
         if (isAlreadyRecorded) {
             log.info("Reservation {} is already recorded!", reservation);
-            throw new ReservationAlreadyExistsException(String.format("Reservation (%s) already exists!", reservation.toString()));
+            throw new ReservationAlreadyExistsException(String.format("A foglalás (%s) már létezik!",
+                    reservation.toString()));
         }
         if (!campingSlotDao.isReserved(campingSlotId, reservation.getStart(), reservation.getEnd())) {
             log.info("Camping slot {} is already reserved!", campingSlotId);
-            throw new CampingSlotAlreadyReservedException(String.format("Camping slot (%s) already reserved!", campingSlotId));
+            throw new CampingSlotAlreadyReservedException(String.format("A %s táborhely már foglalt!",
+                    campingSlotDao.findById(campingSlotId).getName()));
         }
+        CustomerServiceImpl.CheckCustomerInput(customer);
         reservationDao.create(reservation, customer, campingSlotId);
     }
 
@@ -69,7 +74,8 @@ public class ReservationServiceImpl implements ReservationService {
     public int getPrice(int id) {
         Billable reservation = reservationDao.findByCustomer(id);
         CampingSlot campingSlot = campingSlotDao.findByCustomerId(id);
-        return (int) DAYS.between(((Reservation) reservation).getStart(), ((Reservation) reservation).getEnd()) * (Reservation.DAILY_PRICE +
+        return (int) DAYS.between(((Reservation) reservation).getStart(),
+                ((Reservation) reservation).getEnd()) * (Reservation.DAILY_PRICE +
                 (((Reservation) reservation).isElectricity() ? ElectricityExpanse.ELECTRICITY_PRICE : 0) *
                         (int) (campingSlot.getStartCoordinate().getX() - campingSlot.getEndCoordinate().getX()) *
                         (int) (campingSlot.getStartCoordinate().getX() - campingSlot.getEndCoordinate().getX()));
