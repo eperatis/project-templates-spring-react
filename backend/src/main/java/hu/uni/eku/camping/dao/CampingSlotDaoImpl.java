@@ -69,6 +69,7 @@ public class CampingSlotDaoImpl implements CampingSlotDao {
         public static CampingSlot entity2model(CampingSlotEntity entity) {
             return new CampingSlot(
                     entity.getId(),
+                    entity.getName(),
                     entity.getStartCoordinate(),
                     entity.getEndCoordinate(),
                     entity.getDescription()
@@ -77,6 +78,7 @@ public class CampingSlotDaoImpl implements CampingSlotDao {
 
         public static CampingSlotEntity model2entity(CampingSlot model) {
             return CampingSlotEntity.builder()
+                    .name(model.getName())
                     .startCoordinate(model.getStartCoordinate())
                     .endCoordinate(model.getEndCoordinate())
                     .description(model.getDescription())

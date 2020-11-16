@@ -19,6 +19,9 @@ public class CampingSlotEntity {
     private int id;
 
     @Column
+    private String name;
+
+    @Column
     private Point startCoordinate;
 
     @Column

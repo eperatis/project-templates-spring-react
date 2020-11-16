@@ -38,12 +38,13 @@ public class CampingSlotController {
         try {
             service.record(new CampingSlot(
                     -1,
+                    request.getName(),
                     request.getStartCoordinate(),
                     request.getEndCoordinate(),
                     request.getDescription()
             ));
         } catch (CampingSlotAlreadyExistsException e) {
-            log.info("Camping slot ({}) is already exists! Message: {}", request.getDescription(), e.getMessage());
+            log.info("Camping slot ({}) is already exists! Message: {}", request.getName(), e.getMessage());
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     e.getMessage()
@@ -58,6 +59,7 @@ public class CampingSlotController {
         return service.readAll().stream().map(model ->
                 CampingSlotDto.builder()
                         .id(model.getId())
+                        .name(model.getName())
                         .startCoordinate(model.getStartCoordinate())
                         .endCoordinate(model.getEndCoordinate())
                         .slotStatus(service.isReserved(model.getId(), LocalDate.now()) ? SlotStatus.NOT_EMPTY : SlotStatus.EMPTY)
@@ -76,9 +78,12 @@ public class CampingSlotController {
         return service.findAllBetweenInterval(request.getStart(), request.getEnd()).stream().map(model ->
                 CampingSlotDto.builder()
                         .id(model.getId())
+                        .name(model.getName())
                         .startCoordinate(model.getStartCoordinate())
                         .endCoordinate(model.getEndCoordinate())
-                        .slotStatus(service.isReserved(model.getId(), LocalDate.now()) ? SlotStatus.NOT_EMPTY : SlotStatus.EMPTY)
+                        .slotStatus(service.isReserved(model.getId(), LocalDate.now())
+                                ? SlotStatus.NOT_EMPTY
+                                : SlotStatus.EMPTY)
                         .description(model.getDescription())
                         .build())
                 .collect(Collectors.toList());
