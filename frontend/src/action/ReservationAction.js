@@ -3,7 +3,8 @@ import dispatcher from "../dispatcher/Dispatcher";
 import * as actionConstants from '../dispatcher/ReservationActionConstants';
 import * as slotActions from "./SlotActions";
 
-export const recordingReservation = ({address, firstName, lastName, phoneNumber, electricity, end, slotId, start}) => {
+export const recordingReservation = ({address, firstName, lastName, phoneNumber, electricity, end, slotId, start},
+                                     history) => {
     axios.post('/reservation/record',
         {
             customer: {
@@ -20,6 +21,7 @@ export const recordingReservation = ({address, firstName, lastName, phoneNumber,
         .then(() => {
             slotActions.fetchMap();
             dispatcher.dispatch({action: actionConstants.clearError});
+            history.push("/");
         })
         .catch((err) => {
             dispatcher.dispatch({

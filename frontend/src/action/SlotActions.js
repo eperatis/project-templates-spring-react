@@ -20,6 +20,17 @@ export const fetchFreeSlotsBetweenInterval = ({startDate, endDate}) => {
         dispatcher.dispatch({
             action: actionConstants.refreshSlots,
             payload: resp.data
-        });
+        })
+        dispatcher.dispatch({action: actionConstants.clearError})
     })
+        .catch((err) => {
+            dispatcher.dispatch({
+                action: actionConstants.showError,
+                payload: `${err.response.status}-${err.response.statusText}: ${err.response.data.message}`
+            });
+            dispatcher.dispatch({
+                action: actionConstants.refreshSlots,
+                payload: []
+            })
+        });
 }

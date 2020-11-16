@@ -35,7 +35,7 @@ class Map extends React.Component {
             let dx = this.state.slots[l].endCoordinate.x - this.state.slots[l].startCoordinate.x + 1;
             let dy = this.state.slots[l].endCoordinate.y - this.state.slots[l].startCoordinate.y + 1;
             this.mapIndex[this.state.slots[l].startCoordinate.y - 1][this.state.slots[l].startCoordinate.x - 1] =
-                [dx, dy, this.state.slots[l].slotStatus === "EMPTY" ? 1 : 2, this.state.slots[l].description];
+                [dx, dy, this.state.slots[l].slotStatus === "EMPTY" ? 1 : 2, this.state.slots[l].name];
         }
         for (let l = 0; l < this.state.slots.length; l++) {
             let dx = this.state.slots[l].endCoordinate.x - this.state.slots[l].startCoordinate.x + 1;

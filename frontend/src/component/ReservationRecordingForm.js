@@ -1,7 +1,7 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import ErrorMessageWell from "./ErrorMessageWell";
 import * as actions from "../action/ReservationAction";
+import {withRouter} from "react-router-dom";
 
 class ReservationRecordingForm extends React.Component {
     constructor(props) {
@@ -63,13 +63,13 @@ class ReservationRecordingForm extends React.Component {
                         <label className="form-check-label" htmlFor={"electricity"}>Áram vásárás</label>
                     </div>
                 </div>
-                <Link className="btn btn-outline-dark mr-3" to={{pathname: "/"}} onClick={() => {
-                    actions.recordingReservation(this.state)
+                <button className="btn btn-outline-dark mr-3" onClick={() => {
+                    actions.recordingReservation(this.state, this.props.history)
                 }}>Submit
-                </Link>
+                </button>
             </div>
         );
     }
 }
 
-export default ReservationRecordingForm;
+export default withRouter(ReservationRecordingForm);

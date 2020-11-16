@@ -1,16 +1,16 @@
 import React from 'react';
 import {default as store} from '../store/ErrorMessageStore'
 
-class ErrorMessageWell extends React.Component{
+class ErrorMessageWell extends React.Component {
 
-    constructor() {
-        super();
-        this.state = { errorMsg : ""}
+    constructor(props) {
+        super(props);
+        this.state = {errorMsg: ""}
         this._errorMsgChange = this._errorMsgChange.bind(this);
     }
 
-    _errorMsgChange(){
-        this.setState({errorMsg : store._errorMsg});
+    _errorMsgChange() {
+        this.setState({errorMsg: store._errorMsg});
     }
 
 
@@ -22,13 +22,13 @@ class ErrorMessageWell extends React.Component{
         store.removeOnChangeListener(this._errorMsgChange);
     }
 
-    render(){
+    render() {
         const msg = this.state.errorMsg;
         return (
             msg !== "" &&
-                    <div className={["alert", "alert-danger"].join(' ')}>
-                        {msg}
-                    </div>
+            <div className={["alert", "alert-danger"].join(' ')}>
+                {msg}
+            </div>
         );
     }
 }
