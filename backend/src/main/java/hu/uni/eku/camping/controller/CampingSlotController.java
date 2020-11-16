@@ -7,6 +7,8 @@ import hu.uni.eku.camping.model.CampingSlot;
 import hu.uni.eku.camping.model.SlotStatus;
 import hu.uni.eku.camping.service.CampingSlotService;
 import hu.uni.eku.camping.service.exceptions.CampingSlotAlreadyExistsException;
+import hu.uni.eku.camping.service.exceptions.StartDateBeforeEndDateException;
+import hu.uni.eku.camping.service.exceptions.StartDateBeforeTodayException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +64,9 @@ public class CampingSlotController {
                         .name(model.getName())
                         .startCoordinate(model.getStartCoordinate())
                         .endCoordinate(model.getEndCoordinate())
-                        .slotStatus(service.isReserved(model.getId(), LocalDate.now()) ? SlotStatus.NOT_EMPTY : SlotStatus.EMPTY)
+                        .slotStatus(service.isReserved(model.getId(), LocalDate.now())
+                                ? SlotStatus.NOT_EMPTY
+                                : SlotStatus.EMPTY)
                         .description(model.getDescription())
                         .build())
                 .collect(Collectors.toList());
@@ -75,17 +79,33 @@ public class CampingSlotController {
             @RequestBody
                     IntervalRequestDto request
     ) {
-        return service.findAllBetweenInterval(request.getStart(), request.getEnd()).stream().map(model ->
-                CampingSlotDto.builder()
-                        .id(model.getId())
-                        .name(model.getName())
-                        .startCoordinate(model.getStartCoordinate())
-                        .endCoordinate(model.getEndCoordinate())
-                        .slotStatus(service.isReserved(model.getId(), LocalDate.now())
-                                ? SlotStatus.NOT_EMPTY
-                                : SlotStatus.EMPTY)
-                        .description(model.getDescription())
-                        .build())
-                .collect(Collectors.toList());
+        try {
+            return service.findAllBetweenInterval(request.getStart(), request.getEnd()).stream().map(model ->
+                    CampingSlotDto.builder()
+                            .id(model.getId())
+                            .name(model.getName())
+                            .startCoordinate(model.getStartCoordinate())
+                            .endCoordinate(model.getEndCoordinate())
+                            .slotStatus(service.isReserved(model.getId(), LocalDate.now())
+                                    ? SlotStatus.NOT_EMPTY
+                                    : SlotStatus.EMPTY)
+                            .description(model.getDescription())
+                            .build())
+                    .collect(Collectors.toList());
+        } catch (StartDateBeforeTodayException e) {
+            log.info("A kezdődátum {} nem lehet a mai nap előtt!", request.getStart().toString());
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage()
+            );
+        } catch (StartDateBeforeEndDateException e) {
+            log.info("A kezdődátum ({}) nem lehet a végdátum ({}) előtt!",
+                    request.getStart().toString(), request.getEnd().toString()
+            );
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage()
+            );
+        }
     }
 }
