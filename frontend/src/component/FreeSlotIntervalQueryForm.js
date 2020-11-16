@@ -15,7 +15,7 @@ class FreeSlotIntervalQueryForm extends React.Component {
     formOnChange(event) {
         const {name, value} = event.target;
         this.setState({[name]: value}, () => {
-            if(this.state.startDate !== 0 && this.state.endDate !== 0){
+            if (this.state.startDate !== 0 && this.state.endDate !== 0) {
                 actions.fetchFreeSlotsBetweenInterval(this.state)
             }
         });

@@ -31,7 +31,8 @@ class FreeSlotList extends React.Component {
                     return (
                         <FreeSlotListItem key={index} id={id} name={name} description={description}
                                           startCoordinate={startCoordinate} endCoordinate={endCoordinate}
-                        startDate={this.queryParams.current.state.startDate} endDate={this.queryParams.current.state.endDate}/>
+                                          startDate={this.queryParams.current.state.startDate}
+                                          endDate={this.queryParams.current.state.endDate}/>
                     );
                 })}
             </div>
