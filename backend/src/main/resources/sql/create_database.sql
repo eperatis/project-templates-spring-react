@@ -1,2 +1,1 @@
-CREATE DATABASE complex;
 CREATE DATABASE camping;

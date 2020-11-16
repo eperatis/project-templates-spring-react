@@ -113,12 +113,12 @@ On the other hand, some libraries and modules have to be configured such as Swag
 #Run -> Edit Configuration -> Environment -> VM Options
 -DDB_HOST=localhost
 -DDB_PORT=3306
--DDB_NAME=complex
+-DDB_NAME=camping
 -DDB_USER=root
 -DDB_PASSWORD=password
 ```
 
-## Userful Commands
+## Useful Commands
 
 __Update Maven Version in Commandline__
 
