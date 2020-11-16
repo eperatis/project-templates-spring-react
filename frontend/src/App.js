@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.scss';
-import {Container, Row, Col } from "react-bootstrap";
 import {
     BrowserRouter as Router,
     Route,
@@ -14,40 +13,35 @@ import CustomerList from "./component/CustomerList";
 import CustomerRecordingForm from "./component/CustomerRecordingForm";
 import NotFound from "./component/NotFound";
 
+import Map from "./component/Map";
+import FreeSlotList from "./component/FreeSlotList";
+import ReservationRecordingForm from "./component/ReservationRecordingForm";
 
 
 function App() {
-  return (
-      <Router>
-          <Container fluid>
-              <Row>
-                  <Col xs={2} id="sidebar-wrapper">
-                      <Sidebar />
-                  </Col>
-                  <Col  xs={10} id="page-content-wrapper">
-                      <div className={["App","container"]}>
-                          <div className={"row"}>
-                              <div className={"col-md-3"}></div>
-                              <div className={"col-md-6"}>
-                                  <Switch>
-                                      {/*<Route exact path="/slot/status" component={Slots}/>*/}
-                                      <Route exact path="/customer" component={CustomerList}/>
-                                      <Route exact path="/customer/record" component={CustomerRecordingForm}/>
-                                      <Route exact path="/404" component={NotFound}/>
-                                      <Redirect to="/404"/>
-                                      <CustomerRecordingForm/>
-                                      <CustomerList/>
-                                  </Switch>
-                              </div>
-                              <div className={"col-md-3"}></div>
-                          </div>
-                      </div>
-                  </Col>
-              </Row>
-
-          </Container>
-      </Router>
-  );
+    return (
+        <Router>
+            <div className={"row"}>
+                <div className={"col-md-2"}>
+                    <Sidebar/>
+                </div>
+                <div className={"col-md-8"}>
+                    <Switch>
+                        {<Route exact path="/" component={Map}/>}
+                        <Route exact path="/free-slots" component={FreeSlotList}/>
+                        <Route exact path="/reservation/record" component={ReservationRecordingForm}/>
+                        <Route exact path="/customer" component={CustomerList}/>
+                        <Route exact path="/customer/record" component={CustomerRecordingForm}/>
+                        <Route exact path="/404" component={NotFound}/>
+                        <Redirect to="/404"/>
+                        <CustomerRecordingForm/>
+                        <CustomerList/>
+                    </Switch>
+                </div>
+                <div className={"col-md-2"}/>
+            </div>
+        </Router>
+    );
 }
 
 export default App;
